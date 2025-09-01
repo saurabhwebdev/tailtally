@@ -17,7 +17,8 @@ import {
   UserCheck,
   HelpCircle,
   ChevronDown,
-  Sparkles
+  Sparkles,
+  Info
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -53,7 +54,8 @@ const getNavigationItems = (userRole) => {
       category: "Support",
       items: [
         { name: "Help Center", href: "/help", icon: HelpCircle, description: "Get assistance" },
-        { name: "Settings", href: "/settings", icon: Settings, description: "Preferences & config" }
+        { name: "Settings", href: "/settings", icon: Settings, description: "Preferences & config" },
+        { name: "Version", href: "/version", icon: Info, description: "About TailTally" }
       ]
     }
   ];

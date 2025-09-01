@@ -16,7 +16,7 @@ import { Navigation } from "./navigation"
 import { useAuth } from "@/contexts/auth-context"
 import LogoutButton from "@/components/auth/logout-button"
 import { NotificationBell } from "@/components/notifications/notification-bell"
-import { getAvatarUrl, getUserInitials, generateAvatarDataUri, generateAvatarHttpUrl } from "@/lib/avatar"
+import { getModernAvatarUrl, getUserInitials, generateModernAvatarDataUri, generateModernAvatarHttpUrl } from "@/lib/modern-avatar"
 import ComprehensiveHelpModal from "@/components/help/comprehensive-help-modal"
 import Link from "next/link"
 
@@ -25,31 +25,32 @@ export function Header() {
   const [avatarImageUrl, setAvatarImageUrl] = useState(null);
   const [showHelpModal, setShowHelpModal] = useState(false);
   
-  const avatarSeed = getAvatarUrl(user, 'avataaars', 64);
   const userInitials = getUserInitials(user);
 
   // Generate the actual image URL from the seed
   useEffect(() => {
     const generateAvatar = async () => {
+      const avatarSeed = getModernAvatarUrl(user, 'lorelei', 64);
       if (avatarSeed) {
         try {
-          const dataUri = await generateAvatarDataUri(avatarSeed);
-          setAvatarImageUrl(dataUri);
-        } catch (error) {
-          console.error('Error generating avatar:', error);
-          // Fallback to HTTP API if local generation fails
+          // For modern avatars, prioritize HTTP API for better performance
           const parts = avatarSeed.split(':');
           if (parts.length === 4) {
             const [, style, seed, size] = parts;
-            const httpUrl = generateAvatarHttpUrl(seed, style, parseInt(size));
+            const httpUrl = generateModernAvatarHttpUrl(seed, style, parseInt(size));
             setAvatarImageUrl(httpUrl);
+          } else {
+            const dataUri = await generateModernAvatarDataUri(avatarSeed);
+            setAvatarImageUrl(dataUri);
           }
+        } catch (error) {
+          console.error('Error generating avatar:', error);
         }
       }
     };
 
     generateAvatar();
-  }, [avatarSeed]);
+  }, [user, user?.avatar]);
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/30 glass-card animate-slide-up shadow-sm shadow-black/5 dark:shadow-white/5">

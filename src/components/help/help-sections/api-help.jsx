@@ -272,6 +272,81 @@ export function APIHelp() {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-4">
+              {/* Authentication & Users */}
+              <div className="space-y-3">
+                <h4 className="font-semibold">Authentication & User Management</h4>
+                <div className="space-y-2">
+                  <div className="p-3 border rounded">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Badge variant="outline" className="bg-blue-50 text-blue-700">POST</Badge>
+                      <code className="text-sm">/api/auth/signup</code>
+                    </div>
+                    <p className="text-sm text-muted-foreground">Register a new user account</p>
+                  </div>
+                  <div className="p-3 border rounded">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Badge variant="outline" className="bg-blue-50 text-blue-700">POST</Badge>
+                      <code className="text-sm">/api/auth/login</code>
+                    </div>
+                    <p className="text-sm text-muted-foreground">Authenticate user and receive JWT token</p>
+                  </div>
+                  <div className="p-3 border rounded">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Badge variant="outline" className="bg-blue-50 text-blue-700">POST</Badge>
+                      <code className="text-sm">/api/auth/logout</code>
+                    </div>
+                    <p className="text-sm text-muted-foreground">Log out current user and clear session</p>
+                  </div>
+                  <div className="p-3 border rounded">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Badge variant="outline" className="bg-green-50 text-green-700">GET</Badge>
+                      <code className="text-sm">/api/auth/me</code>
+                    </div>
+                    <p className="text-sm text-muted-foreground">Get current authenticated user information</p>
+                  </div>
+                  <div className="p-3 border rounded">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Badge variant="outline" className="bg-yellow-50 text-yellow-700">PUT</Badge>
+                      <code className="text-sm">/api/auth/profile</code>
+                    </div>
+                    <p className="text-sm text-muted-foreground">Update current user's profile information</p>
+                  </div>
+                  <div className="p-3 border rounded">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Badge variant="outline" className="bg-green-50 text-green-700">GET</Badge>
+                      <code className="text-sm">/api/users/{`{id}`}</code>
+                    </div>
+                    <p className="text-sm text-muted-foreground">Get specific user details (admin only)</p>
+                  </div>
+                </div>
+              </div>
+
+              <Separator />
+
+              {/* Dashboard & Health */}
+              <div className="space-y-3">
+                <h4 className="font-semibold">Dashboard & System</h4>
+                <div className="space-y-2">
+                  <div className="p-3 border rounded">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Badge variant="outline" className="bg-green-50 text-green-700">GET</Badge>
+                      <code className="text-sm">/api/dashboard/stats</code>
+                    </div>
+                    <p className="text-sm text-muted-foreground">Get dashboard statistics and metrics</p>
+                  </div>
+                  <div className="p-3 border rounded">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Badge variant="outline" className="bg-green-50 text-green-700">GET</Badge>
+                      <code className="text-sm">/api/health</code>
+                    </div>
+                    <p className="text-sm text-muted-foreground">Health check endpoint for monitoring</p>
+                  </div>
+                </div>
+              </div>
+
+              <Separator />
+
+              {/* Inventory Management */}
               <div className="space-y-3">
                 <h4 className="font-semibold">Inventory Management</h4>
                 <div className="space-y-2">
@@ -310,11 +385,47 @@ export function APIHelp() {
                     </div>
                     <p className="text-sm text-muted-foreground">Delete inventory item</p>
                   </div>
+                  <div className="p-3 border rounded">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Badge variant="outline" className="bg-blue-50 text-blue-700">POST</Badge>
+                      <code className="text-sm">/api/inventory/{`{id}`}/sell</code>
+                    </div>
+                    <p className="text-sm text-muted-foreground">Record inventory item sale</p>
+                  </div>
+                  <div className="p-3 border rounded">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Badge variant="outline" className="bg-blue-50 text-blue-700">POST</Badge>
+                      <code className="text-sm">/api/inventory/bulk-import</code>
+                    </div>
+                    <p className="text-sm text-muted-foreground">Bulk import inventory items</p>
+                  </div>
+                  <div className="p-3 border rounded">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Badge variant="outline" className="bg-blue-50 text-blue-700">POST</Badge>
+                      <code className="text-sm">/api/inventory/purchase</code>
+                    </div>
+                    <p className="text-sm text-muted-foreground">Record inventory purchase/restock</p>
+                  </div>
+                  <div className="p-3 border rounded">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Badge variant="outline" className="bg-green-50 text-green-700">GET</Badge>
+                      <code className="text-sm">/api/inventory/stats</code>
+                    </div>
+                    <p className="text-sm text-muted-foreground">Get inventory statistics and analytics</p>
+                  </div>
+                  <div className="p-3 border rounded">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Badge variant="outline" className="bg-green-50 text-green-700">GET</Badge>
+                      <code className="text-sm">/api/inventory/notifications</code>
+                    </div>
+                    <p className="text-sm text-muted-foreground">Get inventory-related notifications (low stock alerts)</p>
+                  </div>
                 </div>
               </div>
 
               <Separator />
 
+              {/* Pet Management */}
               <div className="space-y-3">
                 <h4 className="font-semibold">Pet Management</h4>
                 <div className="space-y-2">
@@ -334,19 +445,192 @@ export function APIHelp() {
                   </div>
                   <div className="p-3 border rounded">
                     <div className="flex items-center gap-2 mb-2">
+                      <Badge variant="outline" className="bg-green-50 text-green-700">GET</Badge>
+                      <code className="text-sm">/api/pets/{`{id}`}</code>
+                    </div>
+                    <p className="text-sm text-muted-foreground">Get specific pet details</p>
+                  </div>
+                  <div className="p-3 border rounded">
+                    <div className="flex items-center gap-2 mb-2">
                       <Badge variant="outline" className="bg-yellow-50 text-yellow-700">PUT</Badge>
                       <code className="text-sm">/api/pets/{`{id}`}</code>
                     </div>
                     <p className="text-sm text-muted-foreground">Update pet information</p>
+                  </div>
+                  <div className="p-3 border rounded">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Badge variant="outline" className="bg-red-50 text-red-700">DELETE</Badge>
+                      <code className="text-sm">/api/pets/{`{id}`}</code>
+                    </div>
+                    <p className="text-sm text-muted-foreground">Delete pet record</p>
+                  </div>
+                  <div className="p-3 border rounded">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Badge variant="outline" className="bg-green-50 text-green-700">GET</Badge>
+                      <code className="text-sm">/api/pets/{`{id}`}/medical</code>
+                    </div>
+                    <p className="text-sm text-muted-foreground">Get pet medical history</p>
+                  </div>
+                  <div className="p-3 border rounded">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Badge variant="outline" className="bg-blue-50 text-blue-700">POST</Badge>
+                      <code className="text-sm">/api/pets/{`{id}`}/medical</code>
+                    </div>
+                    <p className="text-sm text-muted-foreground">Add medical record for pet</p>
+                  </div>
+                  <div className="p-3 border rounded">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Badge variant="outline" className="bg-green-50 text-green-700">GET</Badge>
+                      <code className="text-sm">/api/pets/{`{id}`}/vaccinations</code>
+                    </div>
+                    <p className="text-sm text-muted-foreground">Get pet vaccination records</p>
+                  </div>
+                  <div className="p-3 border rounded">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Badge variant="outline" className="bg-blue-50 text-blue-700">POST</Badge>
+                      <code className="text-sm">/api/pets/{`{id}`}/vaccinations</code>
+                    </div>
+                    <p className="text-sm text-muted-foreground">Add vaccination record</p>
+                  </div>
+                  <div className="p-3 border rounded">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Badge variant="outline" className="bg-blue-50 text-blue-700">POST</Badge>
+                      <code className="text-sm">/api/pets/{`{id}`}/photos</code>
+                    </div>
+                    <p className="text-sm text-muted-foreground">Upload pet photo</p>
+                  </div>
+                  <div className="p-3 border rounded">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Badge variant="outline" className="bg-green-50 text-green-700">GET</Badge>
+                      <code className="text-sm">/api/pets/notifications</code>
+                    </div>
+                    <p className="text-sm text-muted-foreground">Get pet-related notifications</p>
                   </div>
                 </div>
               </div>
 
               <Separator />
 
+              {/* Owner Management */}
+              <div className="space-y-3">
+                <h4 className="font-semibold">Owner/Customer Management</h4>
+                <div className="space-y-2">
+                  <div className="p-3 border rounded">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Badge variant="outline" className="bg-green-50 text-green-700">GET</Badge>
+                      <code className="text-sm">/api/owners</code>
+                    </div>
+                    <p className="text-sm text-muted-foreground">Get all owners/customers</p>
+                  </div>
+                  <div className="p-3 border rounded">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Badge variant="outline" className="bg-blue-50 text-blue-700">POST</Badge>
+                      <code className="text-sm">/api/owners</code>
+                    </div>
+                    <p className="text-sm text-muted-foreground">Create new owner/customer</p>
+                  </div>
+                  <div className="p-3 border rounded">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Badge variant="outline" className="bg-green-50 text-green-700">GET</Badge>
+                      <code className="text-sm">/api/owners/{`{id}`}</code>
+                    </div>
+                    <p className="text-sm text-muted-foreground">Get specific owner details</p>
+                  </div>
+                  <div className="p-3 border rounded">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Badge variant="outline" className="bg-yellow-50 text-yellow-700">PUT</Badge>
+                      <code className="text-sm">/api/owners/{`{id}`}</code>
+                    </div>
+                    <p className="text-sm text-muted-foreground">Update owner information</p>
+                  </div>
+                  <div className="p-3 border rounded">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Badge variant="outline" className="bg-red-50 text-red-700">DELETE</Badge>
+                      <code className="text-sm">/api/owners/{`{id}`}</code>
+                    </div>
+                    <p className="text-sm text-muted-foreground">Delete owner record</p>
+                  </div>
+                  <div className="p-3 border rounded">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Badge variant="outline" className="bg-green-50 text-green-700">GET</Badge>
+                      <code className="text-sm">/api/owners/notifications</code>
+                    </div>
+                    <p className="text-sm text-muted-foreground">Get owner-related notifications</p>
+                  </div>
+                </div>
+              </div>
+
+              <Separator />
+
+              {/* Appointments */}
+              <div className="space-y-3">
+                <h4 className="font-semibold">Appointment Management</h4>
+                <div className="space-y-2">
+                  <div className="p-3 border rounded">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Badge variant="outline" className="bg-green-50 text-green-700">GET</Badge>
+                      <code className="text-sm">/api/appointments</code>
+                    </div>
+                    <p className="text-sm text-muted-foreground">Get all appointments with filtering</p>
+                  </div>
+                  <div className="p-3 border rounded">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Badge variant="outline" className="bg-blue-50 text-blue-700">POST</Badge>
+                      <code className="text-sm">/api/appointments</code>
+                    </div>
+                    <p className="text-sm text-muted-foreground">Create new appointment</p>
+                  </div>
+                  <div className="p-3 border rounded">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Badge variant="outline" className="bg-green-50 text-green-700">GET</Badge>
+                      <code className="text-sm">/api/appointments/{`{id}`}</code>
+                    </div>
+                    <p className="text-sm text-muted-foreground">Get specific appointment details</p>
+                  </div>
+                  <div className="p-3 border rounded">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Badge variant="outline" className="bg-yellow-50 text-yellow-700">PUT</Badge>
+                      <code className="text-sm">/api/appointments/{`{id}`}</code>
+                    </div>
+                    <p className="text-sm text-muted-foreground">Update appointment details</p>
+                  </div>
+                  <div className="p-3 border rounded">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Badge variant="outline" className="bg-red-50 text-red-700">DELETE</Badge>
+                      <code className="text-sm">/api/appointments/{`{id}`}</code>
+                    </div>
+                    <p className="text-sm text-muted-foreground">Cancel/delete appointment</p>
+                  </div>
+                  <div className="p-3 border rounded">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Badge variant="outline" className="bg-blue-50 text-blue-700">POST</Badge>
+                      <code className="text-sm">/api/appointments/{`{id}`}/complete</code>
+                    </div>
+                    <p className="text-sm text-muted-foreground">Mark appointment as completed</p>
+                  </div>
+                  <div className="p-3 border rounded">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Badge variant="outline" className="bg-green-50 text-green-700">GET</Badge>
+                      <code className="text-sm">/api/appointments/stats</code>
+                    </div>
+                    <p className="text-sm text-muted-foreground">Get appointment statistics</p>
+                  </div>
+                </div>
+              </div>
+
+              <Separator />
+
+              {/* Sales & Invoicing */}
               <div className="space-y-3">
                 <h4 className="font-semibold">Sales & Invoicing</h4>
                 <div className="space-y-2">
+                  <div className="p-3 border rounded">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Badge variant="outline" className="bg-green-50 text-green-700">GET</Badge>
+                      <code className="text-sm">/api/sales</code>
+                    </div>
+                    <p className="text-sm text-muted-foreground">Get all sales transactions</p>
+                  </div>
                   <div className="p-3 border rounded">
                     <div className="flex items-center gap-2 mb-2">
                       <Badge variant="outline" className="bg-blue-50 text-blue-700">POST</Badge>
@@ -357,9 +641,37 @@ export function APIHelp() {
                   <div className="p-3 border rounded">
                     <div className="flex items-center gap-2 mb-2">
                       <Badge variant="outline" className="bg-green-50 text-green-700">GET</Badge>
+                      <code className="text-sm">/api/sales/{`{id}`}</code>
+                    </div>
+                    <p className="text-sm text-muted-foreground">Get specific sale details</p>
+                  </div>
+                  <div className="p-3 border rounded">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Badge variant="outline" className="bg-green-50 text-green-700">GET</Badge>
+                      <code className="text-sm">/api/sales/stats</code>
+                    </div>
+                    <p className="text-sm text-muted-foreground">Get sales statistics and analytics</p>
+                  </div>
+                  <div className="p-3 border rounded">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Badge variant="outline" className="bg-green-50 text-green-700">GET</Badge>
                       <code className="text-sm">/api/invoices</code>
                     </div>
                     <p className="text-sm text-muted-foreground">Get all invoices with filtering options</p>
+                  </div>
+                  <div className="p-3 border rounded">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Badge variant="outline" className="bg-blue-50 text-blue-700">POST</Badge>
+                      <code className="text-sm">/api/invoices/generate</code>
+                    </div>
+                    <p className="text-sm text-muted-foreground">Generate new invoice</p>
+                  </div>
+                  <div className="p-3 border rounded">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Badge variant="outline" className="bg-green-50 text-green-700">GET</Badge>
+                      <code className="text-sm">/api/invoices/{`{id}`}</code>
+                    </div>
+                    <p className="text-sm text-muted-foreground">Get specific invoice details</p>
                   </div>
                   <div className="p-3 border rounded">
                     <div className="flex items-center gap-2 mb-2">
@@ -373,6 +685,58 @@ export function APIHelp() {
 
               <Separator />
 
+              {/* Reports */}
+              <div className="space-y-3">
+                <h4 className="font-semibold">Reports & Analytics</h4>
+                <div className="space-y-2">
+                  <div className="p-3 border rounded">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Badge variant="outline" className="bg-green-50 text-green-700">GET</Badge>
+                      <code className="text-sm">/api/reports/sales</code>
+                    </div>
+                    <p className="text-sm text-muted-foreground">Generate sales report</p>
+                  </div>
+                  <div className="p-3 border rounded">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Badge variant="outline" className="bg-green-50 text-green-700">GET</Badge>
+                      <code className="text-sm">/api/reports/sales/export</code>
+                    </div>
+                    <p className="text-sm text-muted-foreground">Export sales report (CSV/Excel)</p>
+                  </div>
+                  <div className="p-3 border rounded">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Badge variant="outline" className="bg-green-50 text-green-700">GET</Badge>
+                      <code className="text-sm">/api/reports/appointments</code>
+                    </div>
+                    <p className="text-sm text-muted-foreground">Generate appointments report</p>
+                  </div>
+                  <div className="p-3 border rounded">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Badge variant="outline" className="bg-green-50 text-green-700">GET</Badge>
+                      <code className="text-sm">/api/reports/appointments/export</code>
+                    </div>
+                    <p className="text-sm text-muted-foreground">Export appointments report</p>
+                  </div>
+                  <div className="p-3 border rounded">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Badge variant="outline" className="bg-green-50 text-green-700">GET</Badge>
+                      <code className="text-sm">/api/reports/pets</code>
+                    </div>
+                    <p className="text-sm text-muted-foreground">Generate pet analytics report</p>
+                  </div>
+                  <div className="p-3 border rounded">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Badge variant="outline" className="bg-green-50 text-green-700">GET</Badge>
+                      <code className="text-sm">/api/reports/owners</code>
+                    </div>
+                    <p className="text-sm text-muted-foreground">Generate customer analytics report</p>
+                  </div>
+                </div>
+              </div>
+
+              <Separator />
+
+              {/* GST Management */}
               <div className="space-y-3">
                 <h4 className="font-semibold">GST Management</h4>
                 <div className="space-y-2">
@@ -389,6 +753,119 @@ export function APIHelp() {
                       <code className="text-sm">/api/inventory/gst</code>
                     </div>
                     <p className="text-sm text-muted-foreground">Update GST settings for inventory items</p>
+                  </div>
+                </div>
+              </div>
+
+              <Separator />
+
+              {/* Settings */}
+              <div className="space-y-3">
+                <h4 className="font-semibold">Settings & Configuration</h4>
+                <div className="space-y-2">
+                  <div className="p-3 border rounded">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Badge variant="outline" className="bg-green-50 text-green-700">GET</Badge>
+                      <code className="text-sm">/api/settings/email</code>
+                    </div>
+                    <p className="text-sm text-muted-foreground">Get email configuration</p>
+                  </div>
+                  <div className="p-3 border rounded">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Badge variant="outline" className="bg-blue-50 text-blue-700">POST</Badge>
+                      <code className="text-sm">/api/settings/email</code>
+                    </div>
+                    <p className="text-sm text-muted-foreground">Save email configuration</p>
+                  </div>
+                  <div className="p-3 border rounded">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Badge variant="outline" className="bg-blue-50 text-blue-700">POST</Badge>
+                      <code className="text-sm">/api/settings/email/test</code>
+                    </div>
+                    <p className="text-sm text-muted-foreground">Test email configuration</p>
+                  </div>
+                  <div className="p-3 border rounded">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Badge variant="outline" className="bg-green-50 text-green-700">GET</Badge>
+                      <code className="text-sm">/api/settings/public-booking</code>
+                    </div>
+                    <p className="text-sm text-muted-foreground">Get public booking configuration</p>
+                  </div>
+                  <div className="p-3 border rounded">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Badge variant="outline" className="bg-yellow-50 text-yellow-700">PUT</Badge>
+                      <code className="text-sm">/api/settings/public-booking</code>
+                    </div>
+                    <p className="text-sm text-muted-foreground">Update public booking settings</p>
+                  </div>
+                </div>
+              </div>
+
+              <Separator />
+
+              {/* Public API */}
+              <div className="space-y-3">
+                <h4 className="font-semibold">Public API (No Auth Required)</h4>
+                <div className="space-y-2">
+                  <div className="p-3 border rounded">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Badge variant="outline" className="bg-green-50 text-green-700">GET</Badge>
+                      <code className="text-sm">/api/public/book-appointment</code>
+                    </div>
+                    <p className="text-sm text-muted-foreground">Get available appointment slots for public booking</p>
+                  </div>
+                  <div className="p-3 border rounded">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Badge variant="outline" className="bg-blue-50 text-blue-700">POST</Badge>
+                      <code className="text-sm">/api/public/book-appointment</code>
+                    </div>
+                    <p className="text-sm text-muted-foreground">Submit public appointment booking</p>
+                  </div>
+                </div>
+              </div>
+
+              <Separator />
+
+              {/* Notifications */}
+              <div className="space-y-3">
+                <h4 className="font-semibold">Notifications</h4>
+                <div className="space-y-2">
+                  <div className="p-3 border rounded">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Badge variant="outline" className="bg-green-50 text-green-700">GET</Badge>
+                      <code className="text-sm">/api/notifications</code>
+                    </div>
+                    <p className="text-sm text-muted-foreground">Get all system notifications</p>
+                  </div>
+                  <div className="p-3 border rounded">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Badge variant="outline" className="bg-green-50 text-green-700">GET</Badge>
+                      <code className="text-sm">/api/notifications/count</code>
+                    </div>
+                    <p className="text-sm text-muted-foreground">Get unread notification count</p>
+                  </div>
+                </div>
+              </div>
+
+              <Separator />
+
+              {/* Seed Data (Development) */}
+              <div className="space-y-3">
+                <h4 className="font-semibold">Seed Data (Development Only)</h4>
+                <div className="space-y-2">
+                  <div className="p-3 border rounded">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Badge variant="outline" className="bg-purple-50 text-purple-700">POST</Badge>
+                      <code className="text-sm">/api/seed/owners</code>
+                    </div>
+                    <p className="text-sm text-muted-foreground">Generate sample owner data</p>
+                  </div>
+                  <div className="p-3 border rounded">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Badge variant="outline" className="bg-purple-50 text-purple-700">POST</Badge>
+                      <code className="text-sm">/api/seed/pets</code>
+                    </div>
+                    <p className="text-sm text-muted-foreground">Generate sample pet data</p>
                   </div>
                 </div>
               </div>

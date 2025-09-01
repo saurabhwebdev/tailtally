@@ -1,0 +1,413 @@
+import { jsPDF } from 'jspdf';
+import autoTable from 'jspdf-autotable';
+
+// Format currency
+const formatCurrency = (amount) => {
+  const num = parseFloat(amount || 0);
+  return `₹${num.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}`;
+};
+
+// Format date
+const formatDate = (date) => {
+  if (!date) return 'N/A';
+  const d = new Date(date);
+  const day = d.getDate().toString().padStart(2, '0');
+  const month = (d.getMonth() + 1).toString().padStart(2, '0');
+  const year = d.getFullYear();
+  return `${day}/${month}/${year}`;
+};
+
+// Main function to generate PDF
+export const generatePDF = (data) => {
+  try {
+    console.log('Starting PDF generation with data:', data);
+    
+    // Create new PDF document
+    const doc = new jsPDF({
+      orientation: 'portrait',
+      unit: 'mm',
+      format: 'a4'
+    });
+    
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const pageHeight = doc.internal.pageSize.getHeight();
+    const margin = 20;
+    let yPos = 20;
+    
+    // ========== HEADER ==========
+    // Company Name
+    doc.setFontSize(24);
+    doc.setTextColor(37, 99, 235);
+    doc.text('TailTally Pet Care', margin, yPos);
+    
+    // Invoice Label
+    doc.setFontSize(20);
+    doc.text('INVOICE', pageWidth - margin - 40, yPos);
+    
+    yPos += 10;
+    
+    // Company Details
+    doc.setFontSize(10);
+    doc.setTextColor(textColor.r, textColor.g, textColor.b);
+    doc.setFont(undefined, 'normal');
+    doc.text('123 Pet Street, Animal City', margin, yPos);
+    yPos += 5;
+    doc.text('Phone: +91 98765 43210', margin, yPos);
+    yPos += 5;
+    doc.text('Email: info@tailtally.com', margin, yPos);
+    yPos += 5;
+    doc.text('GSTIN: 22AAAAA0000A1Z5', margin, yPos);
+    
+    // Invoice Details (right side)
+    let rightY = yPos - 15;
+    doc.setFont(undefined, 'bold');
+    doc.text('Invoice No:', pageWidth - margin - 60, rightY);
+    doc.setFont(undefined, 'normal');
+    doc.text(data.invoiceNumber || 'INV-001', pageWidth - margin - 30, rightY);
+    
+    rightY += 5;
+    doc.setFont(undefined, 'bold');
+    doc.text('Date:', pageWidth - margin - 60, rightY);
+    doc.setFont(undefined, 'normal');
+    doc.text(formatDate(data.invoiceDate || new Date()), pageWidth - margin - 30, rightY);
+    
+    if (data.saleNumber) {
+      rightY += 5;
+      doc.setFont(undefined, 'bold');
+      doc.text('Sale Ref:', pageWidth - margin - 60, rightY);
+      doc.setFont(undefined, 'normal');
+      doc.text(data.saleNumber, pageWidth - margin - 30, rightY);
+    }
+    
+    yPos += 15;
+    
+    // Separator line
+    doc.setDrawColor(200, 200, 200);
+    doc.line(margin, yPos, pageWidth - margin, yPos);
+    yPos += 10;
+    
+    // ========== BILLING INFO ==========
+    doc.setFontSize(12);
+    doc.setTextColor(primaryColor.r, primaryColor.g, primaryColor.b);
+    doc.setFont(undefined, 'bold');
+    doc.text('Bill To:', margin, yPos);
+    
+    yPos += 7;
+    doc.setFontSize(11);
+    doc.setTextColor(0, 0, 0);
+    const customerName = data.customer?.owner ? 
+      `${data.customer.owner.firstName || ''} ${data.customer.owner.lastName || ''}`.trim() : 
+      'Cash Customer';
+    doc.text(customerName, margin, yPos);
+    
+    yPos += 6;
+    doc.setFontSize(10);
+    doc.setTextColor(textColor.r, textColor.g, textColor.b);
+    doc.setFont(undefined, 'normal');
+    
+    if (data.customer?.owner?.phone) {
+      doc.text(`Phone: ${data.customer.owner.phone}`, margin, yPos);
+      yPos += 5;
+    }
+    if (data.customer?.owner?.email) {
+      doc.text(`Email: ${data.customer.owner.email}`, margin, yPos);
+      yPos += 5;
+    }
+    if (data.customer?.owner?.address) {
+      const addr = data.customer.owner.address;
+      const addressText = `${addr.street || ''} ${addr.city || ''} ${addr.state || ''}`.trim();
+      if (addressText) {
+        doc.text(addressText, margin, yPos);
+        yPos += 5;
+      }
+    }
+    
+    // Pet info if available
+    if (data.customer?.pet) {
+      yPos += 5;
+      doc.setTextColor(primaryColor.r, primaryColor.g, primaryColor.b);
+      doc.setFont(undefined, 'bold');
+      doc.text('Pet:', margin, yPos);
+      doc.setFont(undefined, 'normal');
+      doc.setTextColor(textColor.r, textColor.g, textColor.b);
+      doc.text(`${data.customer.pet.name} (${data.customer.pet.species} - ${data.customer.pet.breed || 'Mixed'})`, margin + 15, yPos);
+    }
+    
+    yPos += 10;
+    
+    // ========== ITEMS TABLE ==========
+    const tableColumns = [
+      { header: '#', dataKey: 'sno' },
+      { header: 'Description', dataKey: 'description' },
+      { header: 'Qty', dataKey: 'qty' },
+      { header: 'Rate', dataKey: 'rate' },
+      { header: 'Discount', dataKey: 'discount' },
+      { header: 'GST', dataKey: 'gst' },
+      { header: 'Amount', dataKey: 'amount' }
+    ];
+    
+    const tableRows = [];
+    const items = data.items || [];
+    
+    items.forEach((item, index) => {
+      const qty = item.quantity || 1;
+      const rate = item.unitPrice || item.rate || 0;
+      const discount = item.discount || 0;
+      const discountAmount = item.discountType === 'percentage' ? 
+        (qty * rate * discount / 100) : discount;
+      const taxable = (qty * rate) - discountAmount;
+      const gstRate = item.gst?.rate || item.gstRate || 0;
+      const gstAmount = gstRate > 0 ? (taxable * gstRate / 100) : 0;
+      const total = taxable + gstAmount;
+      
+      tableRows.push({
+        sno: (index + 1).toString(),
+        description: item.name || 'Item',
+        qty: qty.toString(),
+        rate: formatCurrency(rate),
+        discount: discount > 0 ? 
+          (item.discountType === 'percentage' ? `${discount}%` : formatCurrency(discount)) : 
+          '-',
+        gst: gstRate > 0 ? `${gstRate}%` : '-',
+        amount: formatCurrency(total)
+      });
+    });
+    
+    // Add default row if no items
+    if (tableRows.length === 0) {
+      tableRows.push({
+        sno: '1',
+        description: 'Service',
+        qty: '1',
+        rate: formatCurrency(data.totals?.grandTotal || 0),
+        discount: '-',
+        gst: '-',
+        amount: formatCurrency(data.totals?.grandTotal || 0)
+      });
+    }
+    
+    // Draw table
+    autoTable(doc, {
+      columns: tableColumns,
+      body: tableRows,
+      startY: yPos,
+      theme: 'grid',
+      headStyles: {
+        fillColor: [37, 99, 235],
+        textColor: [255, 255, 255],
+        fontSize: 10,
+        fontStyle: 'bold'
+      },
+      bodyStyles: {
+        fontSize: 9,
+        textColor: [60, 60, 60]
+      },
+      columnStyles: {
+        sno: { cellWidth: 15, halign: 'center' },
+        description: { cellWidth: 'auto' },
+        qty: { cellWidth: 20, halign: 'center' },
+        rate: { cellWidth: 25, halign: 'right' },
+        discount: { cellWidth: 25, halign: 'center' },
+        gst: { cellWidth: 20, halign: 'center' },
+        amount: { cellWidth: 30, halign: 'right' }
+      },
+      margin: { left: margin, right: margin }
+    });
+    
+    // Get position after table
+    yPos = doc.lastAutoTable.finalY + 10;
+    
+    // ========== TOTALS ==========
+    const totalsX = pageWidth - margin - 80;
+    
+    // Subtotal
+    doc.setFontSize(10);
+    doc.setTextColor(textColor.r, textColor.g, textColor.b);
+    doc.setFont(undefined, 'normal');
+    doc.text('Subtotal:', totalsX, yPos);
+    doc.text(formatCurrency(data.totals?.subtotal || 0), pageWidth - margin, yPos, { align: 'right' });
+    
+    // Discount
+    if ((data.totals?.totalDiscount || 0) > 0) {
+      yPos += 6;
+      doc.setTextColor(greenColor.r, greenColor.g, greenColor.b);
+      doc.text('Discount:', totalsX, yPos);
+      doc.text(`-${formatCurrency(data.totals.totalDiscount)}`, pageWidth - margin, yPos, { align: 'right' });
+    }
+    
+    // GST
+    if ((data.totals?.totalGST || 0) > 0) {
+      yPos += 6;
+      doc.setTextColor(textColor.r, textColor.g, textColor.b);
+      doc.text('GST:', totalsX, yPos);
+      doc.text(formatCurrency(data.totals.totalGST), pageWidth - margin, yPos, { align: 'right' });
+    }
+    
+    // Grand Total
+    yPos += 8;
+    doc.setDrawColor(200, 200, 200);
+    doc.line(totalsX - 5, yPos - 2, pageWidth - margin, yPos - 2);
+    yPos += 4;
+    
+    doc.setFontSize(12);
+    doc.setFont(undefined, 'bold');
+    doc.setTextColor(primaryColor.r, primaryColor.g, primaryColor.b);
+    doc.text('Total:', totalsX, yPos);
+    doc.text(formatCurrency(data.totals?.grandTotal || data.totals?.finalAmount || 0), 
+      pageWidth - margin, yPos, { align: 'right' });
+    
+    // ========== PAYMENT INFO ==========
+    yPos += 15;
+    doc.setFontSize(11);
+    doc.setTextColor(0, 0, 0);
+    doc.setFont(undefined, 'bold');
+    doc.text('Payment Information', margin, yPos);
+    
+    yPos += 7;
+    doc.setFontSize(10);
+    doc.setFont(undefined, 'normal');
+    doc.setTextColor(textColor.r, textColor.g, textColor.b);
+    
+    const paymentMethod = (data.payment?.method || 'cash').toUpperCase();
+    doc.text(`Method: ${paymentMethod}`, margin, yPos);
+    
+    yPos += 5;
+    const paymentStatus = (data.payment?.status || 'pending').toUpperCase();
+    doc.setFont(undefined, 'bold');
+    if (paymentStatus === 'PAID') {
+      doc.setTextColor(greenColor.r, greenColor.g, greenColor.b);
+    } else if (paymentStatus === 'PARTIAL') {
+      doc.setTextColor(255, 159, 64);
+    } else {
+      doc.setTextColor(220, 53, 69);
+    }
+    doc.text(`Status: ${paymentStatus}`, margin, yPos);
+    
+    doc.setFont(undefined, 'normal');
+    doc.setTextColor(textColor.r, textColor.g, textColor.b);
+    
+    if (data.payment?.paidAmount > 0) {
+      yPos += 5;
+      doc.text(`Paid: ${formatCurrency(data.payment.paidAmount)}`, margin, yPos);
+    }
+    
+    if (data.payment?.dueAmount > 0) {
+      yPos += 5;
+      doc.setTextColor(220, 53, 69);
+      doc.setFont(undefined, 'bold');
+      doc.text(`Due: ${formatCurrency(data.payment.dueAmount)}`, margin, yPos);
+    }
+    
+    // ========== FOOTER ==========
+    doc.setFontSize(9);
+    doc.setTextColor(100, 100, 100);
+    doc.setFont(undefined, 'italic');
+    doc.text('Thank you for your business!', pageWidth / 2, pageHeight - 30, { align: 'center' });
+    doc.text('Terms: Payment due within 30 days', pageWidth / 2, pageHeight - 25, { align: 'center' });
+    
+    // Page number
+    doc.setFont(undefined, 'normal');
+    doc.setFontSize(8);
+    doc.text(`Page 1 of 1`, pageWidth / 2, pageHeight - 15, { align: 'center' });
+    
+    return doc;
+  } catch (error) {
+    console.error('Error in PDF generation:', error);
+    throw error;
+  }
+};
+
+// Function to download PDF
+export const downloadPDF = (data) => {
+  try {
+    console.log('Downloading PDF for:', data.invoiceNumber || data.saleNumber);
+    const doc = generatePDF(data);
+    const filename = `Invoice_${data.invoiceNumber || data.saleNumber || 'DRAFT'}_${new Date().toISOString().split('T')[0]}.pdf`;
+    doc.save(filename);
+    return true;
+  } catch (error) {
+    console.error('Download failed:', error);
+    return false;
+  }
+};
+
+// Function to get PDF as blob for preview
+export const getPDFBlob = (data) => {
+  try {
+    const doc = generatePDF(data);
+    return doc.output('blob');
+  } catch (error) {
+    console.error('Failed to generate PDF blob:', error);
+    return null;
+  }
+};
+
+// Function to get PDF as data URL for preview
+export const getPDFDataURL = (data) => {
+  try {
+    const doc = generatePDF(data);
+    return doc.output('datauristring');
+  } catch (error) {
+    console.error('Failed to generate PDF data URL:', error);
+    return null;
+  }
+};
+
+// Test function
+export const testPDF = () => {
+  const testData = {
+    invoiceNumber: 'INV-TEST-001',
+    invoiceDate: new Date(),
+    saleNumber: 'SALE-TEST-001',
+    customer: {
+      owner: {
+        firstName: 'John',
+        lastName: 'Doe',
+        phone: '+91 98765 43210',
+        email: 'john@example.com',
+        address: {
+          street: '123 Main St',
+          city: 'Mumbai',
+          state: 'Maharashtra'
+        }
+      },
+      pet: {
+        name: 'Max',
+        species: 'Dog',
+        breed: 'Golden Retriever'
+      }
+    },
+    items: [
+      {
+        name: 'Pet Grooming Service',
+        quantity: 1,
+        unitPrice: 500,
+        discount: 50,
+        discountType: 'amount',
+        gst: { rate: 18 }
+      },
+      {
+        name: 'Dog Food - Premium 5kg',
+        quantity: 2,
+        unitPrice: 800,
+        discount: 10,
+        discountType: 'percentage',
+        gst: { rate: 5 }
+      }
+    ],
+    totals: {
+      subtotal: 2100,
+      totalDiscount: 210,
+      totalGST: 171,
+      grandTotal: 2061
+    },
+    payment: {
+      method: 'UPI',
+      status: 'paid',
+      paidAmount: 2061,
+      dueAmount: 0
+    }
+  };
+  
+  return downloadPDF(testData);
+};

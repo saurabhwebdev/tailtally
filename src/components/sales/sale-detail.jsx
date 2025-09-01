@@ -22,7 +22,7 @@ import {
   Settings,
   Eye
 } from 'lucide-react';
-import { downloadInvoice, generateInvoiceHTML } from '@/lib/invoice-generator';
+// Import will be dynamic when needed
 import { InvoiceSettingsModal } from '@/components/invoices/invoice-settings-modal';
 
 export function SaleDetail({ sale, onClose }) {
@@ -85,6 +85,9 @@ export function SaleDetail({ sale, onClose }) {
     try {
       setLoading(true);
       
+      // Import the new PDF generator
+      const { downloadInvoicePDF } = await import('@/lib/invoice-pdf-generator');
+      
       // Validate sale data before generating PDF
       if (!saleData) {
         throw new Error('No sale data available');
@@ -95,9 +98,20 @@ export function SaleDetail({ sale, onClose }) {
       }
 
       console.log('Generating invoice for sale:', saleData.saleNumber);
-      console.log('Sale data:', saleData);
       
-      const success = await downloadInvoice(saleData);
+      // Convert sale data to invoice format
+      const invoiceData = {
+        invoiceNumber: `INV-${saleData.saleNumber}`,
+        invoiceDate: saleData.saleDate,
+        dueDate: saleData.payment?.dueDate || new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+        saleNumber: saleData.saleNumber,
+        customer: saleData.customer,
+        items: saleData.items,
+        totals: saleData.totals,
+        payment: saleData.payment
+      };
+      
+      const success = await downloadInvoicePDF(invoiceData);
       if (success) {
         // Show success toast
         if (typeof window !== 'undefined' && window.showToast) {
@@ -121,10 +135,13 @@ export function SaleDetail({ sale, onClose }) {
     }
   };
 
-  const handlePreviewInvoice = () => {
-    const html = generateInvoiceHTML(saleData);
-    setInvoiceHTML(html);
-    setShowInvoicePreview(true);
+  const handlePreviewInvoice = async () => {
+    try {
+      // For now, just download the PDF as preview functionality needs separate implementation
+      await handleDownloadInvoice();
+    } catch (error) {
+      console.error('Error previewing invoice:', error);
+    }
   };
 
   const handleInvoiceSettings = () => {

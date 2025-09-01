@@ -58,6 +58,7 @@ import {
 import { useAuth } from '@/contexts/auth-context';
 import Link from 'next/link';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { getModernAvatarUrl, getUserInitials, generateModernAvatarHttpUrl } from '@/lib/modern-avatar'
 
 // Chart colors for consistent theming
 const CHART_COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8', '#82CA9D']
@@ -92,7 +93,7 @@ const recentActivities = [
     pet: "Luna (Golden Retriever)",
     time: "2 minutes ago",
     user: "Dr. Sarah Johnson",
-    avatar: "/avatars/01.png",
+    userEmail: "sarah.johnson@example.com",
     type: "appointment"
   },
   {
@@ -101,7 +102,7 @@ const recentActivities = [
     pet: "Max (Labrador)",
     time: "15 minutes ago",
     user: "Dr. Mike Chen",
-    avatar: "/avatars/02.png",
+    userEmail: "mike.chen@example.com",
     type: "treatment"
   },
   {
@@ -110,7 +111,7 @@ const recentActivities = [
     pet: "Bella (Persian Cat)",
     time: "1 hour ago",
     user: "Reception",
-    avatar: "/avatars/03.png",
+    userEmail: "reception@example.com",
     type: "registration"
   },
   {
@@ -119,7 +120,7 @@ const recentActivities = [
     pet: "Charlie (Beagle)",
     time: "2 hours ago",
     user: "Billing System",
-    avatar: "/avatars/04.png",
+    userEmail: "billing@example.com",
     type: "payment"
   }
 ]
@@ -534,18 +535,21 @@ export default function DashboardContent() {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            {recentActivities.map((activity, index) => (
-              <div 
-                key={activity.id} 
-                className="flex items-center space-x-4 p-3 rounded-lg hover:bg-accent/50 transition-colors duration-200 animate-slide-up"
-                style={{ animationDelay: `${index * 100}ms` }}
-              >
-                <Avatar className="h-10 w-10">
-                  <AvatarImage src={activity.avatar} />
-                  <AvatarFallback className="bg-primary/10 text-primary">
-                    {activity.user.split(' ').map(n => n[0]).join('')}
-                  </AvatarFallback>
-                </Avatar>
+            {recentActivities.map((activity, index) => {
+              // Generate avatar URL using modern avatar system
+              const avatarUrl = generateModernAvatarHttpUrl(activity.userEmail || activity.user, 'lorelei', 40);
+              return (
+                <div 
+                  key={activity.id} 
+                  className="flex items-center space-x-4 p-3 rounded-lg hover:bg-accent/50 transition-colors duration-200 animate-slide-up"
+                  style={{ animationDelay: `${index * 100}ms` }}
+                >
+                  <Avatar className="h-10 w-10">
+                    <AvatarImage src={avatarUrl} />
+                    <AvatarFallback className="bg-primary/10 text-primary">
+                      {activity.user.split(' ').map(n => n[0]).join('')}
+                    </AvatarFallback>
+                  </Avatar>
                 <div className="flex-1 space-y-1">
                   <p className="text-sm font-medium">
                     {activity.action}
@@ -562,7 +566,8 @@ export default function DashboardContent() {
                   {activity.type}
                 </Badge>
               </div>
-            ))}
+              )
+            })}
           </CardContent>
         </Card>
 

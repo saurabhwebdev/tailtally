@@ -23,8 +23,8 @@ import {
   Camera,
   UserCheck
 } from 'lucide-react';
-import { getAvatarUrl, getUserInitials, generateAvatarDataUri, generateAvatarHttpUrl } from '@/lib/avatar';
-import AvatarGenerator from './avatar-generator';
+import { getModernAvatarUrl, getUserInitials, generateModernAvatarDataUri, generateModernAvatarHttpUrl } from '@/lib/modern-avatar';
+import ModernAvatarGenerator from './modern-avatar-generator';
 
 export default function ProfilePage() {
   const { user, updateProfile, isLoading } = useAuth();
@@ -67,29 +67,71 @@ export default function ProfilePage() {
     }
   });
 
+  // Update form data when user changes (e.g., after avatar save)
+  useEffect(() => {
+    if (user) {
+      setFormData({
+        firstName: user.firstName || '',
+        lastName: user.lastName || '',
+        email: user.email || '',
+        phone: user.phone || '',
+        bio: user.bio || '',
+        avatar: user.avatar || '',
+        dateOfBirth: user.dateOfBirth ? new Date(user.dateOfBirth).toISOString().split('T')[0] : '',
+        gender: user.gender || '',
+        address: {
+          street: user.address?.street || '',
+          city: user.address?.city || '',
+          state: user.address?.state || '',
+          zipCode: user.address?.zipCode || '',
+          country: user.address?.country || ''
+        },
+        professionalInfo: {
+          licenseNumber: user.professionalInfo?.licenseNumber || '',
+          specialization: user.professionalInfo?.specialization || '',
+          yearsOfExperience: user.professionalInfo?.yearsOfExperience || '',
+          department: user.professionalInfo?.department || '',
+          employeeId: user.professionalInfo?.employeeId || ''
+        },
+        preferences: {
+          theme: user.preferences?.theme || 'system',
+          language: user.preferences?.language || 'en',
+          notifications: {
+            email: user.preferences?.notifications?.email ?? true,
+            push: user.preferences?.notifications?.push ?? true,
+            sms: user.preferences?.notifications?.sms ?? false
+          }
+        }
+      });
+    }
+  }, [user]);
+
   // Generate avatar image URL from seed
   useEffect(() => {
     const generateAvatar = async () => {
-      const avatarSeed = getAvatarUrl({...user, avatar: formData.avatar || user?.avatar}, 'avataaars', 64);
+      // Use the most up-to-date avatar value
+      const currentAvatar = formData.avatar || user?.avatar;
+      const avatarSeed = getModernAvatarUrl({...user, avatar: currentAvatar}, 'lorelei', 128);
       if (avatarSeed) {
         try {
-          const dataUri = await generateAvatarDataUri(avatarSeed);
-          setAvatarImageUrl(dataUri);
-        } catch (error) {
-          console.error('Error generating avatar:', error);
-          // Fallback to HTTP API if local generation fails
+          // For modern avatars, prioritize HTTP API for better performance
           const parts = avatarSeed.split(':');
           if (parts.length === 4) {
             const [, style, seed, size] = parts;
-            const httpUrl = generateAvatarHttpUrl(seed, style, parseInt(size));
+            const httpUrl = generateModernAvatarHttpUrl(seed, style, parseInt(size));
             setAvatarImageUrl(httpUrl);
+          } else {
+            const dataUri = await generateModernAvatarDataUri(avatarSeed);
+            setAvatarImageUrl(dataUri);
           }
+        } catch (error) {
+          console.error('Error generating avatar:', error);
         }
       }
     };
 
     generateAvatar();
-  }, [user, formData.avatar]);
+  }, [user, user?.avatar, formData.avatar]);
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -579,7 +621,7 @@ export default function ProfilePage() {
         </div>
 
         {/* Avatar Generator */}
-        <AvatarGenerator
+        <ModernAvatarGenerator
           user={user}
           isOpen={isAvatarGeneratorOpen}
           onClose={() => setIsAvatarGeneratorOpen(false)}

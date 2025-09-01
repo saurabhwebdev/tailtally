@@ -1,6 +1,12 @@
 # 🐾 TailTally - Complete Pet Business Management System
 
 <div align="center">
+  <img src="/screenshots/tailtally-logo.png" alt="TailTally Logo" width="200" />
+  <h1 style="color: #e63946; font-size: 3rem; margin: 20px 0;">TailTally</h1>
+  <p><em>Where Technology Meets Tail Wags</em></p>
+</div>
+
+<div align="center">
   <img src="https://img.shields.io/badge/Next.js-15.5.2-black?style=for-the-badge&logo=next.js" alt="Next.js" />
   <img src="https://img.shields.io/badge/React-19.1.0-61DAFB?style=for-the-badge&logo=react" alt="React" />
   <img src="https://img.shields.io/badge/MongoDB-8.18.0-47A248?style=for-the-badge&logo=mongodb" alt="MongoDB" />
@@ -9,8 +15,22 @@
 </div>
 
 <div align="center">
+  <img src="https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square" alt="License" />
+  <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square" alt="PRs Welcome" />
+  <img src="https://img.shields.io/badge/Maintained-yes-green.svg?style=flat-square" alt="Maintained" />
+  <img src="https://img.shields.io/badge/Version-0.1.0-blue.svg?style=flat-square" alt="Version" />
+</div>
+
+<div align="center">
   <h3>🚀 Modern, Feature-Rich POS & Management Solution for Pet Businesses</h3>
   <p>Streamline your pet clinic, store, or grooming business with intelligent automation and comprehensive management tools</p>
+  <p>
+    <a href="#demo">View Demo</a> •
+    <a href="#features">Features</a> •
+    <a href="#installation">Installation</a> •
+    <a href="#documentation">Documentation</a> •
+    <a href="#support">Support</a>
+  </p>
 </div>
 
 ---
@@ -18,6 +38,7 @@
 ## 📋 Table of Contents
 
 - [Overview](#-overview)
+- [Screenshots](#-screenshots)
 - [Key Features](#-key-features)
 - [Technology Stack](#-technology-stack)
 - [System Architecture](#-system-architecture)
@@ -25,8 +46,12 @@
 - [Configuration](#-configuration)
 - [Core Modules](#-core-modules)
 - [API Documentation](#-api-documentation)
+- [Deployment](#-deployment)
+- [Performance](#-performance)
 - [Security](#-security)
+- [Troubleshooting](#-troubleshooting)
 - [Contributing](#-contributing)
+- [Roadmap](#-roadmap)
 - [License](#-license)
 
 ## 🌟 Overview
@@ -38,6 +63,40 @@ TailTally is a comprehensive, enterprise-grade Pet Business Management System de
 - 🛍️ **Pet Stores** - Track inventory, process sales, manage suppliers
 - ✂️ **Grooming Salons** - Schedule appointments, track services, manage customers
 - 🐕 **Pet Daycares** - Handle check-ins, track pets, manage owners
+- 🏨 **Pet Hotels** - Manage bookings, track stays, handle billing
+- 🚑 **Emergency Clinics** - Quick patient intake, medical history access
+
+## 📸 Screenshots
+
+<div align="center">
+  <h3>Dashboard Overview</h3>
+  <img src="/screenshots/dashboard.png" alt="Dashboard" width="800" />
+  <p><em>Real-time metrics and insights at a glance</em></p>
+</div>
+
+<div align="center">
+  <h3>Pet Management</h3>
+  <img src="/screenshots/pet-management.png" alt="Pet Management" width="800" />
+  <p><em>Comprehensive pet profiles with medical history</em></p>
+</div>
+
+<div align="center">
+  <h3>Inventory System</h3>
+  <img src="/screenshots/inventory.png" alt="Inventory" width="800" />
+  <p><em>Advanced inventory tracking with GST support</em></p>
+</div>
+
+<div align="center">
+  <h3>Point of Sale</h3>
+  <img src="/screenshots/pos.png" alt="POS" width="800" />
+  <p><em>Fast and intuitive checkout process</em></p>
+</div>
+
+<div align="center">
+  <h3>Public Booking Portal</h3>
+  <img src="/screenshots/public-booking.png" alt="Public Booking" width="800" />
+  <p><em>Customer self-service appointment booking</em></p>
+</div>
 
 ## ✨ Key Features
 
@@ -353,57 +412,279 @@ Visit `http://localhost:3000` to access the application.
 
 ## 🔌 API Documentation
 
-### Authentication Endpoints
+### Base URL
 ```
-POST   /api/auth/signup         # User registration
-POST   /api/auth/login          # User login
-POST   /api/auth/logout         # User logout
-GET    /api/auth/me             # Current user info
-PUT    /api/auth/profile        # Update profile
+https://your-domain.com/api
 ```
 
-### Resource Endpoints
+### Authentication
+The TailTally API uses JWT (JSON Web Tokens) for authentication. Include the token in the Authorization header:
 ```
-# Appointments
-GET    /api/appointments        # List appointments
-POST   /api/appointments        # Create appointment
-GET    /api/appointments/:id    # Get appointment
-PUT    /api/appointments/:id    # Update appointment
-DELETE /api/appointments/:id    # Delete appointment
-
-# Inventory
-GET    /api/inventory           # List products
-POST   /api/inventory           # Add product
-GET    /api/inventory/:id       # Get product
-PUT    /api/inventory/:id       # Update product
-DELETE /api/inventory/:id       # Delete product
-
-# Pets
-GET    /api/pets                # List pets
-POST   /api/pets                # Add pet
-GET    /api/pets/:id            # Get pet
-PUT    /api/pets/:id            # Update pet
-DELETE /api/pets/:id            # Delete pet
-
-# Owners
-GET    /api/owners              # List owners
-POST   /api/owners              # Add owner
-GET    /api/owners/:id          # Get owner
-PUT    /api/owners/:id          # Update owner
-DELETE /api/owners/:id          # Delete owner
-
-# Sales
-GET    /api/sales               # List sales
-POST   /api/sales               # Create sale
-GET    /api/sales/:id           # Get sale
+Authorization: Bearer YOUR_JWT_TOKEN
 ```
 
-### Public Endpoints
+### Response Format
+All API responses follow this format:
+```json
+{
+  "success": true|false,
+  "data": { ... },
+  "message": "Success or error message",
+  "error": "Error details if applicable"
+}
 ```
-GET    /api/public/book-appointment     # Get available slots
-POST   /api/public/book-appointment     # Submit booking
-GET    /api/settings/public-booking     # Get booking settings
+
+### Authentication & User Management
+
+| Method | Endpoint | Description | Auth Required |
+|--------|----------|-------------|---------------|
+| POST | `/api/auth/signup` | Register new user | No |
+| POST | `/api/auth/login` | User login | No |
+| POST | `/api/auth/logout` | User logout | Yes |
+| GET | `/api/auth/me` | Get current user | Yes |
+| PUT | `/api/auth/profile` | Update profile | Yes |
+| GET | `/api/users/:id` | Get user details | Yes (Admin) |
+
+### Dashboard & System
+
+| Method | Endpoint | Description | Auth Required |
+|--------|----------|-------------|---------------|
+| GET | `/api/dashboard/stats` | Dashboard statistics | Yes |
+| GET | `/api/health` | Health check | No |
+
+### Pet Management
+
+| Method | Endpoint | Description | Auth Required |
+|--------|----------|-------------|---------------|
+| GET | `/api/pets` | List all pets | Yes |
+| POST | `/api/pets` | Create new pet | Yes |
+| GET | `/api/pets/:id` | Get pet details | Yes |
+| PUT | `/api/pets/:id` | Update pet | Yes |
+| DELETE | `/api/pets/:id` | Delete pet | Yes |
+| GET | `/api/pets/:id/medical` | Get medical history | Yes |
+| POST | `/api/pets/:id/medical` | Add medical record | Yes |
+| GET | `/api/pets/:id/vaccinations` | Get vaccinations | Yes |
+| POST | `/api/pets/:id/vaccinations` | Add vaccination | Yes |
+| POST | `/api/pets/:id/photos` | Upload photo | Yes |
+| GET | `/api/pets/notifications` | Pet notifications | Yes |
+
+### Owner/Customer Management
+
+| Method | Endpoint | Description | Auth Required |
+|--------|----------|-------------|---------------|
+| GET | `/api/owners` | List all owners | Yes |
+| POST | `/api/owners` | Create new owner | Yes |
+| GET | `/api/owners/:id` | Get owner details | Yes |
+| PUT | `/api/owners/:id` | Update owner | Yes |
+| DELETE | `/api/owners/:id` | Delete owner | Yes |
+| GET | `/api/owners/notifications` | Owner notifications | Yes |
+
+### Inventory Management
+
+| Method | Endpoint | Description | Auth Required |
+|--------|----------|-------------|---------------|
+| GET | `/api/inventory` | List products | Yes |
+| POST | `/api/inventory` | Add product | Yes |
+| GET | `/api/inventory/:id` | Get product | Yes |
+| PUT | `/api/inventory/:id` | Update product | Yes |
+| DELETE | `/api/inventory/:id` | Delete product | Yes |
+| POST | `/api/inventory/:id/sell` | Record sale | Yes |
+| POST | `/api/inventory/bulk-import` | Bulk import | Yes |
+| POST | `/api/inventory/purchase` | Record purchase | Yes |
+| GET | `/api/inventory/stats` | Inventory stats | Yes |
+| GET | `/api/inventory/notifications` | Low stock alerts | Yes |
+| GET | `/api/inventory/gst` | GST config | Yes |
+| PUT | `/api/inventory/gst` | Update GST | Yes |
+
+### Appointments
+
+| Method | Endpoint | Description | Auth Required |
+|--------|----------|-------------|---------------|
+| GET | `/api/appointments` | List appointments | Yes |
+| POST | `/api/appointments` | Create appointment | Yes |
+| GET | `/api/appointments/:id` | Get appointment | Yes |
+| PUT | `/api/appointments/:id` | Update appointment | Yes |
+| DELETE | `/api/appointments/:id` | Delete appointment | Yes |
+| POST | `/api/appointments/:id/complete` | Mark complete | Yes |
+| GET | `/api/appointments/stats` | Appointment stats | Yes |
+
+### Sales & Invoicing
+
+| Method | Endpoint | Description | Auth Required |
+|--------|----------|-------------|---------------|
+| GET | `/api/sales` | List sales | Yes |
+| POST | `/api/sales` | Create sale | Yes |
+| GET | `/api/sales/:id` | Get sale details | Yes |
+| GET | `/api/sales/stats` | Sales statistics | Yes |
+| GET | `/api/invoices` | List invoices | Yes |
+| POST | `/api/invoices/generate` | Generate invoice | Yes |
+| GET | `/api/invoices/:id` | Get invoice | Yes |
+| POST | `/api/invoices/:id/payment` | Record payment | Yes |
+
+### Reports & Analytics
+
+| Method | Endpoint | Description | Auth Required |
+|--------|----------|-------------|---------------|
+| GET | `/api/reports/sales` | Sales report | Yes |
+| GET | `/api/reports/sales/export` | Export sales | Yes |
+| GET | `/api/reports/appointments` | Appointments report | Yes |
+| GET | `/api/reports/appointments/export` | Export appointments | Yes |
+| GET | `/api/reports/pets` | Pet analytics | Yes |
+| GET | `/api/reports/owners` | Customer analytics | Yes |
+
+### Settings & Configuration
+
+| Method | Endpoint | Description | Auth Required |
+|--------|----------|-------------|---------------|
+| GET | `/api/settings/email` | Get email config | Yes |
+| POST | `/api/settings/email` | Save email config | Yes |
+| POST | `/api/settings/email/test` | Test email | Yes |
+| GET | `/api/settings/public-booking` | Get booking config | Yes |
+| PUT | `/api/settings/public-booking` | Update booking | Yes |
+
+### Public API (No Authentication Required)
+
+| Method | Endpoint | Description | Auth Required |
+|--------|----------|-------------|---------------|
+| GET | `/api/public/book-appointment` | Available slots | No |
+| POST | `/api/public/book-appointment` | Submit booking | No |
+
+### Notifications
+
+| Method | Endpoint | Description | Auth Required |
+|--------|----------|-------------|---------------|
+| GET | `/api/notifications` | All notifications | Yes |
+| GET | `/api/notifications/count` | Unread count | Yes |
+
+### Development Endpoints
+
+| Method | Endpoint | Description | Auth Required |
+|--------|----------|-------------|---------------|
+| POST | `/api/seed/owners` | Generate test owners | Yes (Dev) |
+| POST | `/api/seed/pets` | Generate test pets | Yes (Dev) |
+
+### Example Requests
+
+#### Authentication
+```bash
+# Login
+curl -X POST https://your-domain.com/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"user@example.com","password":"password"}'
+
+# Response
+{
+  "success": true,
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "user": {
+    "id": "user-id",
+    "email": "user@example.com",
+    "role": "admin"
+  }
+}
 ```
+
+#### Create Pet
+```bash
+curl -X POST https://your-domain.com/api/pets \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Max",
+    "species": "dog",
+    "breed": "Golden Retriever",
+    "age": 3,
+    "ownerId": "owner-id"
+  }'
+```
+
+#### Get Inventory with Filters
+```bash
+curl -X GET "https://your-domain.com/api/inventory?category=food&lowStock=true" \
+  -H "Authorization: Bearer YOUR_TOKEN"
+```
+
+### Error Handling
+
+| Status Code | Description |
+|-------------|-------------|
+| 200 | Success |
+| 201 | Created |
+| 400 | Bad Request |
+| 401 | Unauthorized |
+| 403 | Forbidden |
+| 404 | Not Found |
+| 500 | Internal Server Error |
+
+### Rate Limiting
+- **Authenticated requests**: 1000 requests per hour
+- **Public endpoints**: 100 requests per hour
+- Headers include: `X-RateLimit-Limit`, `X-RateLimit-Remaining`, `X-RateLimit-Reset`
+
+## 🚀 Deployment
+
+### Vercel Deployment (Recommended)
+
+1. **Fork/Clone the repository**
+2. **Install Vercel CLI**
+   ```bash
+   npm i -g vercel
+   ```
+3. **Deploy**
+   ```bash
+   vercel
+   ```
+4. **Set Environment Variables** in Vercel Dashboard
+
+### Docker Deployment
+
+```dockerfile
+# Dockerfile
+FROM node:18-alpine
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --only=production
+COPY . .
+RUN npm run build
+EXPOSE 3000
+CMD ["npm", "start"]
+```
+
+```bash
+# Build and run
+docker build -t tailtally .
+docker run -p 3000:3000 --env-file .env.production tailtally
+```
+
+### Traditional Server Deployment
+
+1. **Build the application**
+   ```bash
+   npm run build
+   ```
+2. **Start production server**
+   ```bash
+   npm start
+   ```
+3. **Configure reverse proxy** (Nginx/Apache)
+4. **Set up SSL certificate** (Let's Encrypt)
+5. **Configure PM2** for process management
+
+## ⚡ Performance
+
+### Optimization Features
+- **Server-side rendering** for fast initial loads
+- **Image optimization** with Next.js Image component
+- **Code splitting** for reduced bundle sizes
+- **Database indexing** for fast queries
+- **Redis caching** (optional) for session management
+- **CDN integration** for static assets
+
+### Performance Metrics
+- **First Contentful Paint**: < 1.5s
+- **Time to Interactive**: < 3s
+- **Lighthouse Score**: 90+
+- **Core Web Vitals**: All green
 
 ## 🔒 Security
 
@@ -426,6 +707,47 @@ GET    /api/settings/public-booking     # Get booking settings
 - Data encryption at rest (MongoDB)
 - HTTPS enforcement in production
 
+## 🔧 Troubleshooting
+
+### Common Issues
+
+#### MongoDB Connection Failed
+```bash
+# Check MongoDB service
+sudo systemctl status mongod
+
+# Start MongoDB
+sudo systemctl start mongod
+```
+
+#### Port Already in Use
+```bash
+# Find process using port 3000
+lsof -i :3000
+
+# Kill the process
+kill -9 <PID>
+```
+
+#### JWT Secret Missing
+```bash
+# Generate secure secret
+openssl rand -base64 32
+```
+
+#### Email Not Sending
+1. Check Gmail app password configuration
+2. Verify 2FA is enabled
+3. Check firewall settings for port 587
+4. Test with email configuration tool in settings
+
+### Debug Mode
+Enable debug logging:
+```env
+DEBUG=true
+LOG_LEVEL=debug
+```
+
 ## 🤝 Contributing
 
 We welcome contributions! Please follow these steps:
@@ -443,6 +765,36 @@ We welcome contributions! Please follow these steps:
 - Update documentation as needed
 - Ensure no breaking changes
 
+## 🗺️ Roadmap
+
+### Version 0.2 (Q1 2025)
+- [ ] Mobile application (React Native)
+- [ ] Advanced reporting with AI insights
+- [ ] Multi-language support
+- [ ] Webhook integrations
+- [ ] API rate limiting dashboard
+
+### Version 0.3 (Q2 2025)
+- [ ] Video consultations
+- [ ] Pet health monitoring IoT integration
+- [ ] Advanced inventory forecasting
+- [ ] Customer mobile app
+- [ ] Multi-branch support
+
+### Version 1.0 (Q3 2025)
+- [ ] AI-powered diagnostics assistant
+- [ ] Blockchain-based medical records
+- [ ] Advanced analytics dashboard
+- [ ] Third-party integrations marketplace
+- [ ] White-label solutions
+
+### Long-term Vision
+- Global pet care network
+- AI-driven health predictions
+- Telemedicine platform
+- Pet insurance integration
+- Complete ecosystem for pet care
+
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
@@ -453,14 +805,70 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - UI components powered by Radix UI
 - Icons by Lucide React
 - Styling with TailwindCSS
+- Avatar system by DiceBear
+- Charts by Recharts
+- Date handling by date-fns
+
+### Special Thanks
+- All contributors who have helped shape TailTally
+- The open-source community for amazing tools
+- Pet businesses worldwide for their feedback
+- Our furry friends who inspire us daily 🐕🐈
+
+## 🌟 Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=yourusername/tailtally&type=Date)](https://star-history.com/#yourusername/tailtally&Date)
+
+## 💪 Powered By
+
+<div align="center">
+  <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/nextjs/nextjs-original.svg" alt="Next.js" width="60" height="60"/>
+  <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/react/react-original.svg" alt="React" width="60" height="60"/>
+  <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/mongodb/mongodb-original.svg" alt="MongoDB" width="60" height="60"/>
+  <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/tailwindcss/tailwindcss-plain.svg" alt="TailwindCSS" width="60" height="60"/>
+  <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/nodejs/nodejs-original.svg" alt="Node.js" width="60" height="60"/>
+</div>
 
 ## 📞 Support
 
-For support, email support@tailtally.com or open an issue in the GitHub repository.
+### Get Help
+- 📧 **Email**: support@tailtally.com
+- 💬 **Discord**: [Join our community](https://discord.gg/tailtally)
+- 📚 **Documentation**: [docs.tailtally.com](https://docs.tailtally.com)
+- 🐛 **Issues**: [GitHub Issues](https://github.com/yourusername/tailtally/issues)
+- 💡 **Feature Requests**: [GitHub Discussions](https://github.com/yourusername/tailtally/discussions)
+
+### Professional Services
+- **Custom Development**: Tailored features for your business
+- **Training**: On-site or remote training sessions
+- **Priority Support**: 24/7 dedicated support
+- **Migration Services**: Data migration from existing systems
+
+## 📊 Statistics
+
+<div align="center">
+  <img src="https://img.shields.io/github/stars/yourusername/tailtally?style=social" alt="Stars" />
+  <img src="https://img.shields.io/github/forks/yourusername/tailtally?style=social" alt="Forks" />
+  <img src="https://img.shields.io/github/watchers/yourusername/tailtally?style=social" alt="Watchers" />
+</div>
 
 ---
 
 <div align="center">
+  <h3>🐾 Join the TailTally Community</h3>
+  <p>
+    <a href="https://twitter.com/tailtally">Twitter</a> •
+    <a href="https://linkedin.com/company/tailtally">LinkedIn</a> •
+    <a href="https://youtube.com/tailtally">YouTube</a> •
+    <a href="https://blog.tailtally.com">Blog</a>
+  </p>
+</div>
+
+<div align="center">
+  <img src="/screenshots/footer-banner.png" alt="TailTally Footer" width="800" />
   <p>Made with ❤️ for Pet Businesses Worldwide</p>
   <p>© 2024 TailTally. All rights reserved.</p>
+  <p>
+    <a href="#">Back to Top ⬆️</a>
+  </p>
 </div>

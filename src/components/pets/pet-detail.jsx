@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { generatePetAvatarUrl } from '@/lib/animal-avatars';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -305,8 +306,8 @@ export default function PetDetail({ pet, onClose }) {
       <div className="flex justify-between items-start">
         <div className="flex items-center space-x-4">
           <Avatar className="h-16 w-16">
-            <AvatarImage src={pet.photos?.[0]?.url} />
-            <AvatarFallback className="text-2xl">
+            <AvatarImage src={pet.photos?.[0]?.url || generatePetAvatarUrl(pet, 64)} />
+            <AvatarFallback className={`text-2xl text-white ${speciesColors[pet.species] || speciesColors.other}`}>
               {speciesEmojis[pet.species] || '🐾'}
             </AvatarFallback>
           </Avatar>

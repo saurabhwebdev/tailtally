@@ -1,3 +1,7 @@
+// Re-export all modern avatar functions for backward compatibility
+export * from './modern-avatar';
+
+// Keep the old imports for any legacy code that might still use them
 import { createAvatar } from '@dicebear/core';
 import { avataaars, initials, pixelArt } from '@dicebear/collection';
 

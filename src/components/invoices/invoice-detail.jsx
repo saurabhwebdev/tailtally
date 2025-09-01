@@ -92,78 +92,13 @@ export function InvoiceDetail({ invoice, onClose }) {
         try {
             setLoading(true);
             
-            // Import the PDF generator
-            const { downloadInvoice } = await import('@/lib/invoice-generator');
+            // Import the new PDF generator
+            const { downloadInvoicePDF } = await import('@/lib/invoice-pdf-generator');
             
-            // Convert invoice data to sale data format for the PDF generator
-            const customerName = invoiceData.customer?.details?.name || 'Unknown Customer';
-            const nameParts = customerName.split(' ');
+            // Pass the invoice data directly - the new generator handles the formatting
+            console.log('Generating PDF for invoice:', invoiceData.invoiceNumber);
             
-            const saleData = {
-                saleNumber: invoiceData.invoiceNumber || `INV-${Date.now()}`,
-                saleDate: invoiceData.invoiceDate || new Date().toISOString(),
-                customer: {
-                    owner: {
-                        firstName: nameParts[0] || 'Unknown',
-                        lastName: nameParts.slice(1).join(' ') || '',
-                        address: invoiceData.customer?.details?.address ? {
-                            street: invoiceData.customer.details.address,
-                            city: '',
-                            state: '',
-                            postalCode: ''
-                        } : {
-                            street: 'Address not provided',
-                            city: '',
-                            state: '',
-                            postalCode: ''
-                        },
-                        phone: invoiceData.customer?.details?.phone || 'N/A',
-                        email: invoiceData.customer?.details?.email || 'N/A'
-                    }
-                },
-                items: invoiceData.items?.length > 0 ? invoiceData.items.map(item => ({
-                    name: item.name || 'Unnamed Item',
-                    sku: item.hsnCode || item.sacCode || 'N/A',
-                    quantity: item.quantity || 1,
-                    unitPrice: item.rate || 0,
-                    discount: item.discount || 0,
-                    discountType: 'amount',
-                    gst: {
-                        isApplicable: (item.gstRate || 0) > 0,
-                        rate: item.gstRate || 0
-                    },
-                    total: item.totalAmount || 0
-                })) : [{
-                    name: 'Service Charge',
-                    sku: 'SVC001',
-                    quantity: 1,
-                    unitPrice: invoiceData.totals?.finalAmount || 0,
-                    discount: 0,
-                    discountType: 'amount',
-                    gst: {
-                        isApplicable: false,
-                        rate: 0
-                    },
-                    total: invoiceData.totals?.finalAmount || 0
-                }],
-                totals: {
-                    subtotal: invoiceData.totals?.subtotal || invoiceData.totals?.finalAmount || 0,
-                    totalDiscount: invoiceData.totals?.totalDiscount || 0,
-                    totalTaxable: invoiceData.totals?.taxableAmount || invoiceData.totals?.finalAmount || 0,
-                    totalGST: invoiceData.totals?.totalGST || 0,
-                    grandTotal: invoiceData.totals?.finalAmount || 0
-                },
-                payment: {
-                    method: invoiceData.payment?.method || 'cash',
-                    status: invoiceData.payment?.status || 'pending',
-                    paidAmount: invoiceData.payment?.paidAmount || 0,
-                    dueAmount: invoiceData.payment?.dueAmount || invoiceData.totals?.finalAmount || 0
-                }
-            };
-            
-            console.log('Formatted sale data for PDF:', saleData);
-            
-            const success = await downloadInvoice(saleData);
+            const success = await downloadInvoicePDF(invoiceData);
             if (success) {
                 // Show success message
                 if (typeof window !== 'undefined' && window.showToast) {

@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { generatePetAvatarUrl } from '@/lib/animal-avatars';
 import {
   Select,
   SelectContent,
@@ -502,8 +503,8 @@ export default function PetManagement() {
                   <TableCell>
                     <div className="flex items-center space-x-3">
                       <Avatar>
-                        <AvatarImage src={pet.photos?.[0]?.url} />
-                        <AvatarFallback>
+                        <AvatarImage src={pet.photos?.[0]?.url || generatePetAvatarUrl(pet, 40)} />
+                        <AvatarFallback className={`text-white ${speciesColors[pet.species] || speciesColors.other}`}>
                           {speciesEmojis[pet.species] || '🐾'}
                         </AvatarFallback>
                       </Avatar>
