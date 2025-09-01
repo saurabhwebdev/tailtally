@@ -51,6 +51,13 @@ const SOURCES = [
   { value: 'other', label: 'Other' }
 ];
 
+const GENDERS = [
+  { value: 'male', label: 'Male' },
+  { value: 'female', label: 'Female' },
+  { value: 'other', label: 'Other' },
+  { value: 'unspecified', label: 'Prefer not to say' }
+];
+
 export default function OwnerForm({ owner = null, onSaved, onCancel }) {
   const { user: currentUser, hasRole, apiRequest } = useAuth();
   const [loading, setLoading] = useState(false);
@@ -62,6 +69,7 @@ export default function OwnerForm({ owner = null, onSaved, onCancel }) {
     email: '',
     phone: '',
     alternatePhone: '',
+    gender: 'unspecified',
     address: {
       street: '',
       city: '',
@@ -104,6 +112,7 @@ export default function OwnerForm({ owner = null, onSaved, onCancel }) {
         email: owner.email || '',
         phone: owner.phone || '',
         alternatePhone: owner.alternatePhone || '',
+        gender: owner.gender || 'unspecified',
         address: {
           street: owner.address?.street || '',
           city: owner.address?.city || '',
@@ -190,12 +199,31 @@ export default function OwnerForm({ owner = null, onSaved, onCancel }) {
       // Prepare data for submission
       const submitData = { ...formData };
       
+      // Log the gender field before cleanup
+      console.log('Gender before cleanup:', submitData.gender);
+      
       // Remove empty fields
       Object.keys(submitData).forEach(key => {
         if (submitData[key] === '' || submitData[key] === null) {
           delete submitData[key];
         }
       });
+
+      // Clean up preferences - ensure enum fields are not empty
+      if (submitData.preferences) {
+        Object.keys(submitData.preferences).forEach(key => {
+          if (submitData.preferences[key] === '' || submitData.preferences[key] === null) {
+            // For enum fields, set defaults instead of deleting
+            if (key === 'communicationMethod') {
+              submitData.preferences[key] = 'email';
+            } else if (key === 'preferredContactTime') {
+              submitData.preferences[key] = 'anytime';
+            } else {
+              delete submitData.preferences[key];
+            }
+          }
+        });
+      }
 
       // Clean up address
       if (submitData.address) {
@@ -225,7 +253,12 @@ export default function OwnerForm({ owner = null, onSaved, onCancel }) {
       if (submitData.billing) {
         Object.keys(submitData.billing).forEach(key => {
           if (submitData.billing[key] === '' || submitData.billing[key] === null) {
-            delete submitData.billing[key];
+            // For enum fields, set defaults instead of deleting
+            if (key === 'preferredPaymentMethod') {
+              submitData.billing[key] = 'cash';
+            } else {
+              delete submitData.billing[key];
+            }
           }
         });
         if (Object.keys(submitData.billing).length === 0) {
@@ -235,6 +268,10 @@ export default function OwnerForm({ owner = null, onSaved, onCancel }) {
 
       const url = owner ? `/api/owners/${owner._id}` : '/api/owners';
       const method = owner ? 'PUT' : 'POST';
+      
+      // Log the final data being sent
+      console.log('Final submitData:', submitData);
+      console.log('Gender in final data:', submitData.gender);
 
       const data = await apiRequest(url, {
         method,
@@ -321,6 +358,25 @@ export default function OwnerForm({ owner = null, onSaved, onCancel }) {
                 placeholder="Enter alternate phone"
               />
             </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="gender">Gender</Label>
+              <Select 
+                value={formData.gender} 
+                onValueChange={(value) => handleInputChange('gender', value)}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select gender" />
+                </SelectTrigger>
+                <SelectContent>
+                  {GENDERS.map((gender) => (
+                    <SelectItem key={gender.value} value={gender.value}>
+                      {gender.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
           </div>
         </div>
 
@@ -333,7 +389,7 @@ export default function OwnerForm({ owner = null, onSaved, onCancel }) {
               <Label htmlFor="street">Street Address</Label>
               <Input
                 id="street"
-                value={formData.address.street}
+                value={formData.address?.street || ''}
                 onChange={(e) => handleInputChange('address.street', e.target.value)}
                 placeholder="Enter street address"
               />
@@ -343,7 +399,7 @@ export default function OwnerForm({ owner = null, onSaved, onCancel }) {
               <Label htmlFor="city">City</Label>
               <Input
                 id="city"
-                value={formData.address.city}
+                value={formData.address?.city || ''}
                 onChange={(e) => handleInputChange('address.city', e.target.value)}
                 placeholder="Enter city"
               />
@@ -353,7 +409,7 @@ export default function OwnerForm({ owner = null, onSaved, onCancel }) {
               <Label htmlFor="state">State</Label>
               <Input
                 id="state"
-                value={formData.address.state}
+                value={formData.address?.state || ''}
                 onChange={(e) => handleInputChange('address.state', e.target.value)}
                 placeholder="Enter state"
               />
@@ -363,7 +419,7 @@ export default function OwnerForm({ owner = null, onSaved, onCancel }) {
               <Label htmlFor="zipCode">ZIP Code</Label>
               <Input
                 id="zipCode"
-                value={formData.address.zipCode}
+                value={formData.address?.zipCode || ''}
                 onChange={(e) => handleInputChange('address.zipCode', e.target.value)}
                 placeholder="Enter ZIP code"
               />
@@ -373,7 +429,7 @@ export default function OwnerForm({ owner = null, onSaved, onCancel }) {
               <Label htmlFor="country">Country</Label>
               <Input
                 id="country"
-                value={formData.address.country}
+                value={formData.address?.country || ''}
                 onChange={(e) => handleInputChange('address.country', e.target.value)}
                 placeholder="Enter country"
               />
@@ -390,7 +446,7 @@ export default function OwnerForm({ owner = null, onSaved, onCancel }) {
               <Label htmlFor="emergencyName">Emergency Contact Name</Label>
               <Input
                 id="emergencyName"
-                value={formData.emergencyContact.name}
+                value={formData.emergencyContact?.name || ''}
                 onChange={(e) => handleInputChange('emergencyContact.name', e.target.value)}
                 placeholder="Enter emergency contact name"
               />
@@ -400,7 +456,7 @@ export default function OwnerForm({ owner = null, onSaved, onCancel }) {
               <Label htmlFor="emergencyRelationship">Relationship</Label>
               <Input
                 id="emergencyRelationship"
-                value={formData.emergencyContact.relationship}
+                value={formData.emergencyContact?.relationship || ''}
                 onChange={(e) => handleInputChange('emergencyContact.relationship', e.target.value)}
                 placeholder="Enter relationship"
               />
@@ -410,7 +466,7 @@ export default function OwnerForm({ owner = null, onSaved, onCancel }) {
               <Label htmlFor="emergencyPhone">Emergency Contact Phone</Label>
               <Input
                 id="emergencyPhone"
-                value={formData.emergencyContact.phone}
+                value={formData.emergencyContact?.phone || ''}
                 onChange={(e) => handleInputChange('emergencyContact.phone', e.target.value)}
                 placeholder="Enter emergency contact phone"
               />
@@ -421,7 +477,7 @@ export default function OwnerForm({ owner = null, onSaved, onCancel }) {
               <Input
                 id="emergencyEmail"
                 type="email"
-                value={formData.emergencyContact.email}
+                value={formData.emergencyContact?.email || ''}
                 onChange={(e) => handleInputChange('emergencyContact.email', e.target.value)}
                 placeholder="Enter emergency contact email"
               />
@@ -510,9 +566,9 @@ export default function OwnerForm({ owner = null, onSaved, onCancel }) {
 
           <div className="space-y-2">
             <Label htmlFor="preferencesNotes">Notes</Label>
-            <Textarea
+              <Textarea
               id="preferencesNotes"
-              value={formData.preferences.notes}
+              value={formData.preferences?.notes || ''}
               onChange={(e) => handleInputChange('preferences.notes', e.target.value)}
               placeholder="Enter any additional notes or preferences"
               rows={3}
@@ -548,7 +604,7 @@ export default function OwnerForm({ owner = null, onSaved, onCancel }) {
               <Label htmlFor="insuranceProvider">Insurance Provider</Label>
               <Input
                 id="insuranceProvider"
-                value={formData.billing.insuranceProvider}
+                value={formData.billing?.insuranceProvider || ''}
                 onChange={(e) => handleInputChange('billing.insuranceProvider', e.target.value)}
                 placeholder="Enter insurance provider"
               />
@@ -558,7 +614,7 @@ export default function OwnerForm({ owner = null, onSaved, onCancel }) {
               <Label htmlFor="insurancePolicyNumber">Insurance Policy Number</Label>
               <Input
                 id="insurancePolicyNumber"
-                value={formData.billing.insurancePolicyNumber}
+                value={formData.billing?.insurancePolicyNumber || ''}
                 onChange={(e) => handleInputChange('billing.insurancePolicyNumber', e.target.value)}
                 placeholder="Enter policy number"
               />
@@ -585,7 +641,7 @@ export default function OwnerForm({ owner = null, onSaved, onCancel }) {
               <Label htmlFor="discountReason">Discount Reason</Label>
               <Input
                 id="discountReason"
-                value={formData.billing.discountReason}
+                value={formData.billing?.discountReason || ''}
                 onChange={(e) => handleInputChange('billing.discountReason', e.target.value)}
                 placeholder="Enter reason for discount"
               />

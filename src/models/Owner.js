@@ -32,6 +32,11 @@ const OwnerSchema = new mongoose.Schema({
     trim: true,
     match: [/^\+?[\d\s-()]+$/, 'Please provide a valid phone number']
   },
+  gender: {
+    type: String,
+    enum: ['male', 'female', 'other', 'unspecified'],
+    default: 'unspecified'
+  },
   
   // Address Information
   address: {

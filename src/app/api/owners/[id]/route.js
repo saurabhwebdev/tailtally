@@ -87,6 +87,10 @@ export async function PUT(request, { params }) {
     
     const body = await request.json();
     
+    // Log the received body to debug gender field
+    console.log('Received update body:', body);
+    console.log('Gender field in body:', body.gender);
+    
     // Check if owner exists
     const existingOwner = await Owner.findById(id);
     if (!existingOwner) {
@@ -133,6 +137,9 @@ export async function PUT(request, { params }) {
       body,
       { new: true, runValidators: true }
     ).populate('userAccount', 'firstName lastName email role');
+    
+    // Log the updated owner to see if gender was saved
+    console.log('Updated owner gender:', updatedOwner.gender);
     
     return Response.json({
       success: true,

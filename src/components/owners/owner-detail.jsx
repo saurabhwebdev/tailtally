@@ -36,6 +36,7 @@ import {
   Clock as ClockIcon
 } from 'lucide-react';
 import OwnerForm from './owner-form';
+import { generateOwnerAvatarUrl, getGenderLabel, getGenderBadgeColor } from '@/lib/owner-avatar';
 
 const sourceColors = {
   walk_in: 'bg-blue-500',
@@ -132,7 +133,10 @@ export default function OwnerDetail({ owner, onClose }) {
       <div className="flex justify-between items-start">
         <div className="flex items-center space-x-4">
           <Avatar className="h-16 w-16">
-            <AvatarImage src={owner.avatar} />
+            <AvatarImage 
+              src={owner.avatar || generateOwnerAvatarUrl(owner)} 
+              alt={`${owner.fullName} avatar`}
+            />
             <AvatarFallback className="text-lg">
               {owner.firstName?.charAt(0)}{owner.lastName?.charAt(0)}
             </AvatarFallback>
@@ -163,6 +167,11 @@ export default function OwnerDetail({ owner, onClose }) {
               <Badge variant="secondary" className={`text-white ${sourceColors[owner.source]}`}>
                 {sourceLabels[owner.source]}
               </Badge>
+              {owner.gender && (
+                <Badge className={getGenderBadgeColor(owner.gender)}>
+                  {getGenderLabel(owner.gender)}
+                </Badge>
+              )}
             </div>
           </div>
         </div>
@@ -176,13 +185,13 @@ export default function OwnerDetail({ owner, onClose }) {
                   Edit
                 </Button>
               </DialogTrigger>
-                             <DialogContent className="max-w-5xl max-h-[95vh] overflow-hidden">
-                 <DialogHeader className="pb-4">
-                   <DialogTitle>Edit Owner</DialogTitle>
-                   <DialogDescription>
-                     Update {owner.fullName}'s information
-                   </DialogDescription>
-                 </DialogHeader>
+              <DialogContent className="max-w-5xl max-h-[95vh] overflow-hidden" aria-describedby="edit-owner-description">
+                <DialogHeader className="pb-4">
+                  <DialogTitle>Edit Owner</DialogTitle>
+                  <DialogDescription id="edit-owner-description">
+                    Update {owner.fullName}'s information
+                  </DialogDescription>
+                </DialogHeader>
                  <div className="overflow-y-auto max-h-[80vh] pr-2">
                    <OwnerForm 
                      owner={owner} 

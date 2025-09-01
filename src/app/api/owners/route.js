@@ -122,6 +122,10 @@ export async function POST(request) {
     
     const body = await request.json();
     
+    // Log the received body to debug gender field
+    console.log('Received POST body:', body);
+    console.log('Gender field in POST body:', body.gender);
+    
     // Check if owner with this email already exists
     const existingOwner = await Owner.findByEmail(body.email);
     if (existingOwner) {

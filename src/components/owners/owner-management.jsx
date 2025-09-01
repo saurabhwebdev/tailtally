@@ -64,6 +64,7 @@ import {
 } from 'lucide-react';
 import OwnerForm from './owner-form';
 import OwnerDetail from './owner-detail';
+import { generateOwnerAvatarUrl } from '@/lib/owner-avatar';
 
 const sourceColors = {
   walk_in: 'bg-blue-500',
@@ -521,7 +522,10 @@ export default function OwnerManagement() {
                   <TableCell>
                     <div className="flex items-center space-x-3">
                       <Avatar>
-                        <AvatarImage src={owner.avatar} />
+                        <AvatarImage 
+                          src={owner.avatar || generateOwnerAvatarUrl(owner)} 
+                          alt={`${owner.fullName} avatar`}
+                        />
                         <AvatarFallback>
                           {owner.firstName?.charAt(0)}{owner.lastName?.charAt(0)}
                         </AvatarFallback>
@@ -692,6 +696,9 @@ export default function OwnerManagement() {
        {selectedOwner && (
          <Dialog open={!!selectedOwner} onOpenChange={() => setSelectedOwner(null)}>
            <DialogContent className="max-w-7xl max-h-[95vh] overflow-hidden">
+             <DialogHeader className="sr-only">
+               <DialogTitle>Owner Details - {selectedOwner.fullName}</DialogTitle>
+             </DialogHeader>
              <div className="overflow-y-auto max-h-[85vh] pr-2">
                <OwnerDetail owner={selectedOwner} onClose={() => setSelectedOwner(null)} />
              </div>
